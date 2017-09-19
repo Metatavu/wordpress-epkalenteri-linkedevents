@@ -1,0 +1,55 @@
+[
+    {
+        "name": "metatavu/linkedevents-php-client",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Metatavu/linkedevents-client-php.git",
+            "reference": "996a62546d595ccb837ca227ba3c8a1af2489613"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Metatavu/linkedevents-client-php/zipball/996a62546d595ccb837ca227ba3c8a1af2489613",
+            "reference": "996a62546d595ccb837ca227ba3c8a1af2489613",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "ext-json": "*",
+            "ext-mbstring": "*",
+            "php": ">=5.4"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "~1.12",
+            "phpunit/phpunit": "~4.8",
+            "satooshi/php-coveralls": "~1.0",
+            "squizlabs/php_codesniffer": "~2.6"
+        },
+        "time": "2017-09-19T19:15:07+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Metatavu\\LinkedEvents\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "proprietary"
+        ],
+        "authors": [
+            {
+                "name": "Swagger and contributors",
+                "homepage": "https://github.com/swagger-api/swagger-codegen"
+            }
+        ],
+        "homepage": "http://swagger.io",
+        "keywords": [
+            "api",
+            "php",
+            "sdk",
+            "swagger"
+        ]
+    }
+]
