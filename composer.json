@@ -1,0 +1,14 @@
+{
+  "name":"Metatavu/wordpress-epkalenteri-linkedevents",
+  "description":"Wordpress plugin for synchronizing epkalenteri.fi events into Linked Events",
+  "keywords":[
+    "wordpress",
+    "plugin",
+    "linkedevents"
+  ],
+  "license":"AGPL-3.0",
+  "type":"wordpress-plugin",
+  "require":{
+    "metatavu/linkedevents-php-client":"*@dev"
+  }
+}
