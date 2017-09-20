@@ -19,16 +19,20 @@
       }
 
       public function adminMenu() {
-        add_options_page (__( "Linked Events Settings", 'linkedevents-epkalenteri' ), __( "Linked Events", 'linkedevents-epkalenteri' ), 'manage_options', LINKEDEVENTS_EPKALENTERI_SETTINGS_OPTION, [$this, 'settingsPage']);
+        add_options_page (__( "Linked Events Settings", 'linkedevents-epkalenteri' ), __( "Linked Events EP", 'linkedevents-epkalenteri' ), 'manage_options', LINKEDEVENTS_EPKALENTERI_SETTINGS_OPTION, [$this, 'settingsPage']);
       }
 
       public function adminInit() {
         register_setting(LINKEDEVENTS_EPKALENTERI_SETTINGS_GROUP, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
         add_settings_section('api', __( "API Settings", 'linkedevents-epkalenteri' ), null, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
+        add_settings_section('geocoder', __( "GEOCoder Settings", 'linkedevents-epkalenteri' ), null, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
         $this->addOption('api', 'url', 'api-url', __( "API URL", 'linkedevents-epkalenteri'));
         $this->addOption('api', 'text', 'api-key', __( "API Key", 'linkedevents-epkalenteri' ));
         $this->addOption('api', 'text', 'datasource', __( "Datasource", 'linkedevents-epkalenteri' ));
         $this->addOption('api', 'text', 'publisher', __( "Publisher Organization", 'linkedevents-epkalenteri' ));
+        $this->addOption('geocoder', 'text', 'geocoder-provider', __( "Geocoder provider (nominatim [default], google_maps)", 'linkedevents-epkalenteri' ));
+        $this->addOption('geocoder', 'text', 'geocoder-nominatim-server', __( "Nominatim Server (defaults to OpenStreetMaps)", 'linkedevents-epkalenteri' ));
+        $this->addOption('geocoder', 'text', 'geocoder-google-maps-apikey', __( "Google Maps API Key", 'linkedevents-epkalenteri' ));
       }
 
       private function addOption($group, $type, $name, $title) {

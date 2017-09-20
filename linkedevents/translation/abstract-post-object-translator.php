@@ -5,6 +5,10 @@
   defined ( 'ABSPATH' ) || die ( 'No script kiddies please!' );
   
   require_once( __DIR__ . '/../../settings/settings.php');
+  require_once( __DIR__ . '/../../vendor/autoload.php');
+ 
+  use Geocoder\Query\GeocodeQuery;
+  use Geocoder\Query\ReverseQuery;
   
   if (!class_exists( '\Metatavu\LinkedEvents\Wordpress\EPKalenteri\Translation\AbstractPostObjectTranslator' ) ) {
   
@@ -87,6 +91,50 @@
        */
       protected function getDataSource() {
         return \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue('datasource');
+      }
+      
+      /**
+       * Returns publisher
+       * 
+       * @return string publisher
+       */
+      protected function getPublisher() {
+        return \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue('publisher');
+      }
+      
+      /**
+       * Geocodes street address
+       * 
+       * @param string $address street address
+       * @return \Geocoder\Model\Address geocoded address
+       */
+      protected function geocodeQuery($address) {
+        $adapter = new \Http\Adapter\Guzzle6\Client();
+        $provider = $this->getGeocoderProvider($adapter);
+        $geocoder = new \Geocoder\StatefulGeocoder($provider, 'fi');
+        $result = $geocoder->geocodeQuery(GeocodeQuery::create($address));
+        return $result->isEmpty() ? null : $result->first();
+      }
+      
+      /**
+       * Returns selected geocoder provider
+       * 
+       * @return \Geocoder\Provider provider
+       */
+      private function getGeocoderProvider($adapter) {
+        $provider = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue('geocoder-provider');
+          
+        if ($provider === "google_maps") {
+          $googleMapsApiKey = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue('geocoder-google-maps-apikey');
+          return new \Geocoder\Provider\GoogleMaps\GoogleMaps($adapter, null, $googleMapsApiKey);
+        }
+        
+        $nominatimServer = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue('geocoder-nominatim-server');
+        if (!$nominatimServer) {
+          $nominatimServer = 'http://nominatim.openstreetmap.org/search';
+        }
+        
+        return new \Geocoder\Provider\Nominatim\Nominatim($adapter, $nominatimServer);
       }
       
     }

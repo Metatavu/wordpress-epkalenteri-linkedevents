@@ -103,13 +103,13 @@
           try {
             $this->updateResource($resource);
           } catch (\Metatavu\LinkedEvents\ApiException $e) {
-            $this->logApiException($e);
+            $this->logApiException($e, $postId, "update");
           }
         } else {
           try {
             $this->createResource($postId, $resource);
           } catch (\Metatavu\LinkedEvents\ApiException $e) {
-            $this->logApiException($e);
+            $this->logApiException($e, $postId, "create");
           }
         }
       }
@@ -173,9 +173,11 @@
        * Logs an API error
        * 
        * @param \Metatavu\LinkedEvents\ApiException $e exception 
+       * @param string $id object id
+       * @param string $operation operation
        */
-      protected function logApiException($e) {
-        error_log("Keyword create failed on [" . $e->getCode() . ']: ' . json_encode($e->getResponseBody()));
+      protected function logApiException($e, $id, $operation) {
+        error_log("$this->type ($id) $operation failed on [" . $e->getCode() . ']: ' . json_encode($e->getResponseBody()));
       }
       
       /**

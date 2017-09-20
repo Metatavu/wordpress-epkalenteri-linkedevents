@@ -9,6 +9,10 @@
   "license":"AGPL-3.0",
   "type":"wordpress-plugin",
   "require":{
-    "metatavu/linkedevents-php-client":"*@dev"
+    "metatavu/linkedevents-php-client":"*@dev",
+    "php-http/guzzle6-adapter": "^1.1",
+    "php-http/message": "^1.6",
+    "geocoder-php/nominatim-provider": "^4.0",
+    "geocoder-php/google-maps-provider": "^4.1"
   }
 }
