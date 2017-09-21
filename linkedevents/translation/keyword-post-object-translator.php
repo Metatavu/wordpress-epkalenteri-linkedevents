@@ -42,5 +42,7 @@
   }
   
   PostObjectTranslatorFactory::registerTranslator("keyword", KeywordPostObjectTranslator::class);
+  PostObjectTranslatorFactory::registerTranslator("audience", KeywordPostObjectTranslator::class);
+  PostObjectTranslatorFactory::registerTranslator("event_category", KeywordPostObjectTranslator::class);
   
 ?>

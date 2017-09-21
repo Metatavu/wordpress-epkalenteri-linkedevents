@@ -7,18 +7,18 @@
   require_once( __DIR__ . '/abstract-keyword-handler.php');
   require_once( __DIR__ . '/../translation/translation.php');
   
-  if (!class_exists( '\Metatavu\LinkedEvents\Wordpress\EPKalenteri\Handlers\KeywordHandler' ) ) {
+  if (!class_exists( '\Metatavu\LinkedEvents\Wordpress\EPKalenteri\Handlers\EventCategoryHandler' ) ) {
   
-    class KeywordHandler extends AbstractKeywordHandler {
+    class EventCategoryHandler extends AbstractKeywordHandler {
       
       public function __construct() {
-        parent::__construct('keyword');
+        parent::__construct('event_category');
       }
       
     }
     
   }
   
-  new KeywordHandler();
+  new EventCategoryHandler();
   
 ?>
