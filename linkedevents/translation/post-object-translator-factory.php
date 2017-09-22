@@ -66,7 +66,9 @@
           if ($resource) {
             $result[$postObject->ID] = $resource;
           } else {
-            error_log("Failed to translate $postObject->ID of type $postObject->post_type");
+            if ($resource === null) {
+              error_log("Failed to translate $postObject->ID of type $postObject->post_type");
+            }
           }
         }
         
