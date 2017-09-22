@@ -88,7 +88,9 @@
         if ($resource) {
           $this->createUpdateResource($postObject->ID, $resource);
         } else {
-          error_log("Failed to translate $postObject->ID of type $postObject->post_type");
+          if ($resource === null) {
+            error_log("Failed to translate $postObject->ID of type $postObject->post_type");
+          }
         }
       }
       
@@ -145,18 +147,27 @@
        */
       protected function nextPage($perPage) {
         $offset = $this->getUpdateOffset();
-        
-        $results = get_posts([
+        $results = $this->getPosts($perPage, $offset, $this->type);
+        $this->setUpdateOffset(sizeof($results) < $perPage ? 0 : $offset + $perPage);
+        return $results;
+      }
+      
+      /**
+       * Lists post objects
+       * 
+       * @param type $perPage number of results per page
+       * @param type $offset offset
+       * @param type $type post type
+       * @return \WP_Post[] post objects
+       */
+      protected function getPosts($perPage, $offset, $type) {
+        return get_posts([
           'posts_per_page'   => $perPage,
 	        'offset'           => $offset, 
-          'post_type'        => $this->type,
+          'post_type'        => $type,
           'post_status'      => 'publish',
           'suppress_filters' => true 
         ]);
-        
-        $this->setUpdateOffset(sizeof($results) < $perPage ? 0 : $offset + $perPage);
-        
-        return $results;
       }
       
       /**
