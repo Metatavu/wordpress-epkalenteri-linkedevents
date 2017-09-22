@@ -45,6 +45,8 @@
         $translator = self::createTranslator($postObject);
         if ($translator) {
           return $translator->translatePostObject($postObject);
+        } else {
+          error_log("Could not create translator for " . $postObject->post_type);
         }
         
         return null;
