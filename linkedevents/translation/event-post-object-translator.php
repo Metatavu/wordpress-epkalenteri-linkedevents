@@ -20,8 +20,6 @@
        * @return \Metatavu\LinkedEvents\Model\Event LinkedEvents event
        */
       public function translatePostObject() {
-        // Sync images
-        
         $superEvent = $this->getSuperEvent();
         
         $result = new \Metatavu\LinkedEvents\Model\Event([
@@ -61,9 +59,9 @@
        */
       private function getEventName() {
         return new \Metatavu\LinkedEvents\Model\EventName([
-          'fi' => $this.getPostMeta('event_name_fi', true),
-          'sv' => $this.getPostMeta('event_name_se', true),
-          'en' => $this.getPostMeta('event_name_en', true)
+          'fi' => $this->getPostMeta('event_name_fi', true),
+          'sv' => $this->getPostMeta('event_name_se', true),
+          'en' => $this->getPostMeta('event_name_en', true)
         ]);
       }
       
@@ -74,9 +72,9 @@
        */
       private function getEventShortDescription() {
         return [
-          'fi' => $this.getPostMeta('event_short_description_fi', true),
-          'sv' => $this.getPostMeta('event_short_description_se', true),
-          'en' => $this.getPostMeta('event_short_description_en', true)
+          'fi' => $this->getPostMeta('event_short_description_fi', true),
+          'sv' => $this->getPostMeta('event_short_description_se', true),
+          'en' => $this->getPostMeta('event_short_description_en', true)
         ];
       }
       
@@ -87,9 +85,9 @@
        */
       private function getEventDescription() {
         return [
-          'fi' => $this.getPostMeta('event_description_fi', true),
-          'sv' => $this.getPostMeta('event_description_se', true),
-          'en' => $this.getPostMeta('event_description_en', true)
+          'fi' => $this->getPostMeta('event_description_fi', true),
+          'sv' => $this->getPostMeta('event_description_se', true),
+          'en' => $this->getPostMeta('event_description_en', true)
         ];
       }
       
@@ -149,7 +147,7 @@
        * @param type $key meta key
        */
       private function addExternalLink($result, $name, $key) {
-        $link = getExternalLink($name, $key);
+        $link = $this->getExternalLink($name, $key);
         if ($link) {
           $result[] = $link;
         }
@@ -295,10 +293,14 @@
       private function getLocation() {
         $postId = $this->getPostMeta('event_location', true);
         if ($postId) {
-          $locationId = $this->getPostMeta('linkedevents-id', false);
+          $locationId = $this->getPostMeta('linkedevents-id', true);
           if ($locationId) {
             return $this->getPlaceRef($locationId);
+          } else {
+            error_log("Could not find locationId from event " . $this->postObject->ID);
           }
+        } else {
+          error_log("Place not defined for event " . $this->postObject->ID);
         }
         
         return null;
@@ -329,19 +331,19 @@
       private function getOffers() {
         return [new \Metatavu\LinkedEvents\Model\Offer([
           'price' => new \Metatavu\LinkedEvents\Model\OfferPrice([
-            'fi' => this.getPostMeta('event_price_fi', true),
-            'sv' => this.getPostMeta('event_price_se', true),
-            'en' => this.getPostMeta('event_price_en', true)
+            'fi' => $this->getPostMeta('event_price_fi', true),
+            'sv' => $this->getPostMeta('event_price_se', true),
+            'en' => $this->getPostMeta('event_price_en', true)
           ]),
           'infoUrl' => new \Metatavu\LinkedEvents\Model\OfferInfoUrl([
-            'fi' => this.getPostMeta('event_price_info_url', true)
+            'fi' => $this->getPostMeta('event_price_info_url', true)
           ]),
           'description' => new \Metatavu\LinkedEvents\Model\OfferDescription([
-            'fi' => this.getPostMeta('event_registration_fi', true),
-            'sv' => this.getPostMeta('event_registration_se', true),
-            'en' => this.getPostMeta('event_registration_en', true)
+            'fi' => $this->getPostMeta('event_registration_fi', true),
+            'sv' => $this->getPostMeta('event_registration_se', true),
+            'en' => $this->getPostMeta('event_registration_en', true)
           ]),
-          'isFree' => !!this.getPostMeta('event_is_free', true) 
+          'isFree' => !!$this->getPostMeta('event_is_free', true) 
         ])];
       }
       

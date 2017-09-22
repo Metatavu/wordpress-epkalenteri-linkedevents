@@ -8,5 +8,6 @@
   require_once( __DIR__ . '/handlers/keyword-handler.php');
   require_once( __DIR__ . '/handlers/event-handler.php');
   require_once( __DIR__ . '/handlers/place-handler.php');
+  require_once( __DIR__ . '/handlers/image-handler.php');
   
 ?>

@@ -8,7 +8,6 @@
   require_once( __DIR__ . '/../../vendor/autoload.php');
  
   use Geocoder\Query\GeocodeQuery;
-  use Geocoder\Query\ReverseQuery;
   
   if (!class_exists( '\Metatavu\LinkedEvents\Wordpress\EPKalenteri\Translation\AbstractPostObjectTranslator' ) ) {
   
@@ -152,7 +151,7 @@
       /**
        * Returns keywordIds for specified keyword set
        * 
-       * @param string[] $key meta keys
+       * @param string[] $keys meta keys
        * @return string[] keyword ids
        */
       private function getMetaKeywordIds($keys) {
@@ -160,20 +159,33 @@
         $postIds = [];
         
         foreach ($keys as $key) {
-          $ids = $this->getPostMeta($key, false);
-          $postIds = array_merge($postIds, $ids);
+          $postIds = array_merge($postIds, $this->getMetaKeywordPostIds($key));
         }
         
-        foreach (array_unique($postIds) as $postId) {
-          $keywordId = $this->getPostMeta('linkedevents-id', false);
+        foreach (array_filter(array_unique($postIds)) as $postId) {
+          $keywordId = get_post_meta($postId, 'linkedevents-id', true);
           if ($keywordId) {
             $result[] = $keywordId;
           } else {
-            error_log("Keyword id not found from the post " . $this->postObject->ID);
+            error_log("Keyword id not found from the post " . $postId);
           }
         }
         
         return $result;
+      }
+      
+      private function getMetaKeywordPostIds($key) {
+       $ids = $this->getPostMeta($key, false);
+       
+        if ($ids && is_array($ids) && sizeof($ids) > 0) {
+          if (is_array($ids[0])) {
+            return $ids[0];
+          } else {
+            return $ids;
+          }
+        }
+        
+        return $ids;
       }
       
       /**
@@ -270,6 +282,7 @@
        * @return \Geocoder\Provider provider
        */
       private function getGeocoderProvider($adapter) {
+        // Geocoder\Exception\InvalidServerResponse
         $provider = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue('geocoder-provider');
           
         if ($provider === "google_maps") {
