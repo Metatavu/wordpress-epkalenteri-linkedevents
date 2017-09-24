@@ -220,7 +220,7 @@
        * @return \Metatavu\LinkedEvents\Model\IdRef event super event
        */
       private function getSuperEvent() {
-        $postId = $this->getPostMeta('super_event', true);
+        $postId = get_post_meta($this->postObject->ID, 'super_event', true);
         if ($postId) {
           $eventId = get_post_meta($postId, 'linkedevents-id', true);
           if ($eventId) {

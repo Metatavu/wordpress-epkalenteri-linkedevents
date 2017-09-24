@@ -68,7 +68,7 @@
        * @return string linked events id associated with the post object
        */
       protected function getLinkedEventsId() {
-        $linkedEventsId = $this->getPostMeta('linkedevents-id', true);
+        $linkedEventsId = get_post_meta($this->getPostId(), 'linkedevents-id', true);
         if ($linkedEventsId) {
           return $linkedEventsId;
         }
