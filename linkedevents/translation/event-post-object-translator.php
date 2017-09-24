@@ -20,15 +20,20 @@
        * @return \Metatavu\LinkedEvents\Model\Event LinkedEvents event
        */
       public function translatePostObject() {
-        $superEvent = $this->getSuperEvent();
+        $superPostId = $this->getSuperPostId();
+        $superEvent = $superPostId ? $this->getSuperEvent() : null;
+        
+        if ($superPostId && !$superEvent) {
+          error_log("Skipped " . $this->getPostId() . " synchronization because super event has not yet been synchronized");
+          return false;
+        }
         
         $result = new \Metatavu\LinkedEvents\Model\Event([
           'id' => $this->getLinkedEventsId(),
           'location' => $this->getLocation(),
           'keywords' => $this->getKeywords(),
           'superEvent' => $superEvent,
-          'superEventType' => $superEvent ? 'RECURRING' : null,
-          // 'eventStatus' => $this->getEventStatus(),
+          'superEventType' => $superEvent ? 'recurring' : null,
           'publicationStatus' => $this->getPublicationStatus(), 
           'externalLinks' => $this->getExternalLinks(),
           'offers' => $this->getOffers(),
@@ -58,11 +63,7 @@
        * @return \Metatavu\LinkedEvents\Model\EventName name object
        */
       private function getEventName() {
-        return new \Metatavu\LinkedEvents\Model\EventName([
-          'fi' => $this->getPostMeta('event_name_fi', true),
-          'sv' => $this->getPostMeta('event_name_se', true),
-          'en' => $this->getPostMeta('event_name_en', true)
-        ]);
+        return $this->getMetaLocaleArray($postId, 'event_name');
       }
       
       /**
@@ -71,24 +72,16 @@
        * @return object short description object
        */
       private function getEventShortDescription() {
-        return [
-          'fi' => $this->getPostMeta('event_short_description_fi', true),
-          'sv' => $this->getPostMeta('event_short_description_se', true),
-          'en' => $this->getPostMeta('event_short_description_en', true)
-        ];
+        return $this->getMetaLocaleArray($this->getPostId(), 'event_short_description', ' ');
       }
       
       /**
-       * Returns event's sdescription
+       * Returns event's short description
        * 
        * @return object description object
        */
       private function getEventDescription() {
-        return [
-          'fi' => $this->getPostMeta('event_description_fi', true),
-          'sv' => $this->getPostMeta('event_description_se', true),
-          'en' => $this->getPostMeta('event_description_en', true)
-        ];
+        return $this->getMetaLocaleArray($this->getPostId(), 'event_description', ' ');
       }
       
       /**
@@ -97,7 +90,7 @@
        * @return \DateTime event start time
        */
       private function getEventStartTime() {
-        return new \DateTime($this->getPostMeta('event_start_time', true));
+        return $this->parseDate($this->getPostMeta('event_start_time', true));
       }
       
       /**
@@ -106,7 +99,7 @@
        * @return \DateTime event end time
        */
       private function getEventEndTime() {
-        return new \DateTime($this->getPostMeta('event_end_time', true));
+        return $this->parseDate($this->getPostMeta('event_end_time', true));
       }
       
       /**
@@ -129,13 +122,11 @@
        */
       private function getExternalLinks() {
         $result = [];
-        
-        $this->addExternalLink($result, 'Ilmoittautuminen', 'event_registration_info_url');
-        $this->addExternalLink($result, 'Facebook', 'event_facebook_url');
-        $this->addExternalLink($result, 'Twitter', 'event_twitter_url');
-        $this->addExternalLink($result, 'YouTube', 'event_youtube_url');
-        $this->addExternalLink($result, 'Instagram', 'event_instagram_url');
-        
+        $result = $this->addExternalLink($result, 'Ilmoittautuminen', 'event_registration_info_url');
+        $result = $this->addExternalLink($result, 'Facebook', 'event_facebook_url');
+        $result = $this->addExternalLink($result, 'Twitter', 'event_twitter_url');
+        $result = $this->addExternalLink($result, 'YouTube', 'event_youtube_url');
+        $result = $this->addExternalLink($result, 'Instagram', 'event_instagram_url');
         return $result;
       }
       
@@ -151,6 +142,8 @@
         if ($link) {
           $result[] = $link;
         }
+        
+        return  $result;
       }
       
       /**
@@ -166,7 +159,7 @@
           return new \Metatavu\LinkedEvents\Model\Eventlink([
             'name' => $name,
             'link' => $link,
-            'language' => null
+            'language' => "fi"
           ]);
         }
         
@@ -229,7 +222,7 @@
       private function getSuperEvent() {
         $postId = $this->getPostMeta('super_event', true);
         if ($postId) {
-          $eventId = $this->getPostMeta('linkedevents-id', false);
+          $eventId = get_post_meta($postId, 'linkedevents-id', true);
           if ($eventId) {
             return $this->getEventRef($eventId);
           } else {
@@ -248,10 +241,10 @@
       private function getSubEvents() {
         $children = get_children([
           'numberposts' => -1,
-		      'post_parent' => $this->postObject->ID,
+		      'post_parent' => $this->getPostId(),
           'post_status' => 'publish',
-          'post_type' => 'event', 
-         ]);
+          'post_type' => 'event'
+        ]);
                 
         $eventIds = [];
         
@@ -293,7 +286,7 @@
       private function getLocation() {
         $postId = $this->getPostMeta('event_location', true);
         if ($postId) {
-          $locationId = $this->getPostMeta('linkedevents-id', true);
+          $locationId = get_post_meta($postId, 'linkedevents-id', true);
           if ($locationId) {
             return $this->getPlaceRef($locationId);
           } else {
@@ -314,7 +307,7 @@
       private function getImages() {
         $postId = $this->getPostMeta('event_image', true);
         if ($postId) {
-          $locationId = $this->getPostMeta('linkedevents-id', false);
+          $locationId = get_post_meta($postId, 'linkedevents-id', true);
           if ($locationId) {
             return [ $this->getImageRef($locationId) ];
           }
@@ -329,25 +322,82 @@
        * @return \Metatavu\LinkedEvents\Model\Offer[] offers
        */
       private function getOffers() {
+        $priceInfoUrl = $this->getPostMeta('event_price_info_url', true);
+        $infoUrl = $priceInfoUrl ? new \Metatavu\LinkedEvents\Model\OfferInfoUrl([
+          'fi' => $priceInfoUrl
+        ]) : null;
+        
         return [new \Metatavu\LinkedEvents\Model\Offer([
-          'price' => new \Metatavu\LinkedEvents\Model\OfferPrice([
-            'fi' => $this->getPostMeta('event_price_fi', true),
-            'sv' => $this->getPostMeta('event_price_se', true),
-            'en' => $this->getPostMeta('event_price_en', true)
-          ]),
-          'infoUrl' => new \Metatavu\LinkedEvents\Model\OfferInfoUrl([
-            'fi' => $this->getPostMeta('event_price_info_url', true)
-          ]),
-          'description' => new \Metatavu\LinkedEvents\Model\OfferDescription([
-            'fi' => $this->getPostMeta('event_registration_fi', true),
-            'sv' => $this->getPostMeta('event_registration_se', true),
-            'en' => $this->getPostMeta('event_registration_en', true)
-          ]),
-          'isFree' => !!$this->getPostMeta('event_is_free', true) 
+          'price' => new \Metatavu\LinkedEvents\Model\OfferPrice($this->getMetaLocaleArray($this->getPostId(), 'event_price')),
+          'infoUrl' => $infoUrl,
+          'description' => new \Metatavu\LinkedEvents\Model\OfferDescription($this->getMetaLocaleArray($this->getPostId(), 'event_registration')),
+          'isFree' => !!$this->getPostMeta('event_is_free', true)
         ])];
       }
       
+      /**
+       * Returns localized post meta as associative array
+       * 
+       * @param string $name meta field prefix
+       * @return object localized post meta as associative array
+       */
+      protected function getMetaLocaleArray($postId, $name, $default = null) {
+        $fi = $this->getPostMeta($name . "_fi", true);
+        $sv = $this->getPostMeta($name . "_se", true);
+        $en = $this->getPostMeta($name . "_en", true);
+        
+        if (!empty($fi)) {
+          $result['fi'] = $fi;
+        } else if ($default) {
+          $result['fi'] = $default;
+        }
+        
+        if (!empty($sv)) {
+          $result['sv'] = $sv;
+        } else if ($default) {
+          $result['sv'] = $default;
+        }
+        
+        if (!empty($en)) {
+          $result['en'] = $en;
+        } else if ($default) {
+          $result['en'] = $default;
+        }
+        
+        return $result;
+      }
       
+      /**
+       * Returns super post id
+       * 
+       * @return int super post id
+       */
+      protected function getSuperPostId() {
+        return get_post_meta($this->getPostId(), 'super_event', true);
+      }
+      
+      /**
+       * Returns post meta. 
+       * 
+       * If value is not defined in the post and post has a super event the 
+       * value is attempted to retrieve from the super event
+       * 
+       * @param string $name name
+       * @param boolean $single single value
+       * @return string meta value
+       */
+      protected function getPostMeta($name, $single) {
+        $result = get_post_meta($this->getPostId(), $name, $single);
+        
+        if (!$result) {
+          $superPostId = $this->getSuperPostId();
+          if ($superPostId) {
+            return get_post_meta($superPostId, $name, $single);
+          }
+        }
+        
+        return $result;
+      }
     }
     
   }

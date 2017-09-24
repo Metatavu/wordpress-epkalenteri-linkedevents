@@ -42,14 +42,23 @@
       }
       
       /**
-       * Returns post meta
+       * Returns current post id
        * 
-       * @param type $name name
-       * @param type $single single value
+       * @return int current post id
+       */
+      protected function getPostId() {
+        return $this->postObject->ID; 
+      }
+      
+      /**
+       * Returns post meta
+       *
+       * @param string $name name
+       * @param boolean $single single value
        * @return string meta value
        */
       protected function getPostMeta($name, $single) {
-        return get_post_meta($this->postObject->ID, $name, $single);
+        return get_post_meta($this->getPostId(), $name, $single);
       }
       
       /**
@@ -73,7 +82,7 @@
        * @return string origin id for the post object
        */
       protected function getOriginId() {
-        return "$this->originIdPrefix:" . $this->postObject->ID;
+        return "$this->originIdPrefix:" . $this->getPostId();
       }
       
       /**
@@ -92,6 +101,17 @@
        */
       protected function getModifiedTime() {
         return new \DateTime($this->postObject->post_modified_gmt);
+      }
+      
+      /**
+       * Parses date
+       * 
+       * @param string $string
+       * @return \DateTime date
+       */
+      protected function parseDate($string) {
+        $result = new \DateTime($string, new \DateTimeZone('Europe/Helsinki'));
+        return $result; 
       }
       
       /**
