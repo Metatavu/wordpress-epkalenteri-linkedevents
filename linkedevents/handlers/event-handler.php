@@ -14,7 +14,7 @@
       private $eventApi;
       
       public function __construct() {
-        parent::__construct(10, 'never', 'event');
+        parent::__construct('event');
         $this->eventApi = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Api::getEventApi();
       }
       

@@ -26,13 +26,33 @@
         register_setting(LINKEDEVENTS_EPKALENTERI_SETTINGS_GROUP, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
         add_settings_section('api', __( "API Settings", 'linkedevents-epkalenteri' ), null, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
         add_settings_section('geocoder', __( "GEOCoder Settings", 'linkedevents-epkalenteri' ), null, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
+        add_settings_section('updaters', __( "Updater Settings", 'linkedevents-epkalenteri' ), null, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
+        
         $this->addOption('api', 'url', 'api-url', __( "API URL", 'linkedevents-epkalenteri'));
         $this->addOption('api', 'text', 'api-key', __( "API Key", 'linkedevents-epkalenteri' ));
         $this->addOption('api', 'text', 'datasource', __( "Datasource", 'linkedevents-epkalenteri' ));
         $this->addOption('api', 'text', 'publisher', __( "Publisher Organization", 'linkedevents-epkalenteri' ));
         $this->addOption('geocoder', 'text', 'geocoder-provider', __( "Geocoder provider (nominatim [default], google_maps)", 'linkedevents-epkalenteri' ));
         $this->addOption('geocoder', 'text', 'geocoder-nominatim-server', __( "Nominatim Server (defaults to OpenStreetMaps)", 'linkedevents-epkalenteri' ));
-        $this->addOption('geocoder', 'text', 'geocoder-google-maps-apikey', __( "Google Maps API Key", 'linkedevents-epkalenteri' ));
+        $this->addOption('geocoder', 'text', 'geocoder-google-maps-apikey', __( "Google Maps API Key", 'linkedevents-epkalenteri'));
+        
+        $updaters = [
+          'place' =>  __( "Place", 'linkedevents-epkalenteri'),
+          'event' =>  __( "Event", 'linkedevents-epkalenteri'),
+          'attachment' =>  __( "Image", 'linkedevents-epkalenteri'),
+          'keyword' =>  __( "Keyword", 'linkedevents-epkalenteri'),
+          'audience' =>  __( "Audience", 'linkedevents-epkalenteri'),
+          'event_category' =>  __( "Event Category", 'linkedevents-epkalenteri')
+        ];
+        
+        foreach ($updaters as $key => $name) {
+          $intervalTitle = sprintf(__( "%s update interval", 'linkedevents-epkalenteri'), $name);
+          $intervalName = sprintf('%s-update-interval', $key);
+          $batchTitle = sprintf(__( "%s update batch size", 'linkedevents-epkalenteri'), $name);
+          $batchName = sprintf('%s-update-batch', $key); 
+          $this->addOption('updaters', 'text', $intervalName, $intervalTitle);
+          $this->addOption('updaters', 'text', $batchName, $batchTitle);  
+        }
       }
 
       private function addOption($group, $type, $name, $title) {

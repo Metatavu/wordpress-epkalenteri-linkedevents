@@ -14,7 +14,7 @@
       private $filterApi;
       
       public function __construct() {
-        parent::__construct(10, '5s', 'attachment');
+        parent::__construct('attachment');
         $this->imageApi = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Api::getImageApi();
       }
       

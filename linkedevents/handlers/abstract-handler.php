@@ -13,24 +13,24 @@
      */
     class AbstractHandler {
       
-      private $perPage;
       private $type;
       private $updateHook;
       
       /**
        * Constructor
        * 
-       * @param string $recurrence recurrence interval
        * @param string $type type of the handled post object
        */
-      public function __construct($perPage, $recurrence, $type) {
-        $this->perPage = $perPage;
+      public function __construct($type) {
         $this->type = $type;
-        $this->updateHook = "linkedEventsEpkalenteriCronHook-$type";
+        $this->updateHook = "linkedEventsEpkalenteriCronHook" . ucfirst($type);
+        $recurrence = $this->getUpdateInterval();
         
-        add_action($this->updateHook, [ $this, "onUpdateHook" ]);
-        add_action('edit_post', [ $this, "onEditPost" ]);
         add_filter('cron_schedules', [ $this, "cronSchedules" ]);
+        
+        add_action($this->updateHook, [ $this, 'onUpdateHook' ]);
+        add_action('acf/save_post', [ $this, "onAcfSavePost" ], 99999);
+        add_action('update_option_linkedevents-epkalenteri', [ $this, "onOptionsUpdated" ]);
         
         if (!wp_next_scheduled($this->updateHook)) {
           wp_schedule_event(time(), $recurrence, $this->updateHook);
@@ -54,11 +54,11 @@
       }
       
       /**
-       * Function executed when a post is edited
+       * Function executed after post is saved
        * 
        * @param int $postId postId
        */
-      public function onEditPost($postId) {
+      public function onAcfSavePost($postId) {
         $postType = get_post_type($postId);
         if ($postType === $this->type) {
           $postObject = get_post($postId);
@@ -67,10 +67,22 @@
       }
       
       /**
+       * Function executed when plugin settings are updated
+       */
+      public function onOptionsUpdated() {
+        $currentInterval = wp_get_schedule($this->updateHook);
+        $desiredInterval = $this->getUpdateInterval();
+        
+        if ($currentInterval != $desiredInterval) {
+          wp_clear_scheduled_hook($this->updateHook);
+        }
+      }
+      
+      /**
        * Executes an update task
        */
       private function executeUpdateTask() {
-        $postObjects = $this->nextPage($this->perPage);
+        $postObjects = $this->nextPage($this->getUpdateBatch());
         $resources = PostObjectTranslatorFactory::translatePostObjects($postObjects);
         
         foreach ($resources as $postId => $resource) {
@@ -106,12 +118,16 @@
             $this->updateResource($resource);
           } catch (\Metatavu\LinkedEvents\ApiException $e) {
             $this->logApiException($e, $postId, "update");
+          } catch (Error $e) {
+            $this->logError($e, $postId, "update");
           }
         } else {
           try {
             $this->createResource($postId, $resource);
           } catch (\Metatavu\LinkedEvents\ApiException $e) {
             $this->logApiException($e, $postId, "create");
+          } catch (Error $e) {
+            $this->logError($e, $postId, "update");
           }
         }
       }
@@ -192,6 +208,17 @@
       }
       
       /**
+       * Logs an error
+       * 
+       * @param \Error $e exception 
+       * @param string $id object id
+       * @param string $operation operation
+       */
+      protected function logError($e, $id, $operation) {
+        error_log("$this->type ($id) $operation throw " . $e->getMessage());
+      }
+      
+      /**
        * Returns name for the update offset setting
        * 
        * @return string name for the offset setting
@@ -200,6 +227,43 @@
         return $this->type . '-offset';
       }
       
+      /**
+       * Returns update interval for the task
+       * 
+       * @return int offset
+       */
+      private function getUpdateInterval() {
+        $interval = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue($this->getUpdateIntervalSetting());
+        return $interval ? $interval : 'daily';
+      }
+      
+      /**
+       * Returns update interval for the task
+       * 
+       * @return int offset
+       */
+      private function getUpdateBatch() {
+        $batch = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue($this->getUpdateBatchSetting());
+        return $batch ? $batch : 5;
+      }
+      
+      /**
+       * Returns update interval setting name
+       * 
+       * @return string update interval setting name
+       */
+      private function getUpdateIntervalSetting() {
+        return "$this->type-update-interval"; 
+      }
+      
+      /**
+       * Returns update batch setting name
+       * 
+       * @return string update batch setting name
+       */
+      private function getUpdateBatchSetting() {
+        return "$this->type-update-batch"; 
+      }
     }
     
   }

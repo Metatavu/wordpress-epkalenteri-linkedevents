@@ -14,7 +14,7 @@
       private $filterApi;
       
       public function __construct($type) {
-        parent::__construct(10, '5s', $type);
+        parent::__construct($type);
         $this->filterApi = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Api::getFilterApi();
       }
       
