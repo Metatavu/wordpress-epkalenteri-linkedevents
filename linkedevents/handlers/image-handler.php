@@ -35,7 +35,7 @@
        * 
        * @param \Metatavu\LinkedEvents\Model\Image $resource image resource
        */
-      public function updateResource($resource) {
+      public function updateResource($postId, $resource) {
         $this->imageApi->imageUpdate($resource->getId(), $resource);
       }
       

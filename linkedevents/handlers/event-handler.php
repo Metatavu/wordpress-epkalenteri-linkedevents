@@ -18,13 +18,44 @@
         $this->eventApi = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Api::getEventApi();
       }
       
-      public function updateResource($resource) {
+      /**
+       * Updates event into the Linked Events
+       * 
+       * @param \Metatavu\LinkedEvents\Model\Event $resource
+       */
+      public function updateResource($postId, $resource) {
+        $this->updateSubEvents($postId);
         $this->eventApi->eventUpdate($resource->getId(), $resource);
       }
       
+      /**
+       * Creates new event into the Linked Events
+       * 
+       * @param int post object id
+       * @param \Metatavu\LinkedEvents\Model\Event $resource
+       */
       public function createResource($postId, $resource) {
         $created = $this->eventApi->eventCreate($resource);
         $this->setLinkedEventsId($postId, $created->getId());
+      }
+      
+      /**
+       * Updates event's child post objects
+       * 
+       * @param type $postId post id
+       */
+      private function updateSubEvents($postId) {
+        $children = get_children([
+          'numberposts' => -1,
+		      'post_parent' => $postId,
+          'post_status' => 'publish',
+          'post_type' => 'event'
+        ]);
+        
+        foreach ($children as $child) {
+          error_log('update post: ' . $child->ID);
+          $this->updatePostObject($child);
+        }
       }
       
     }

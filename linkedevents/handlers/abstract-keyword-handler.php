@@ -18,7 +18,7 @@
         $this->filterApi = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Api::getFilterApi();
       }
       
-      public function updateResource($resource) {
+      public function updateResource($postId, $resource) {
         $this->filterApi->keywordUpdate($resource->getId(), $resource);
       }
       

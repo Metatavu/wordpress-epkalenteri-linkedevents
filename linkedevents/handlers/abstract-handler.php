@@ -95,7 +95,7 @@
        * 
        * @param \WP_Post $postObject
        */
-      private function updatePostObject($postObject) {
+      protected function updatePostObject($postObject) {
         $resource = PostObjectTranslatorFactory::translatePostObject($postObject);
         if ($resource) {
           $this->createUpdateResource($postObject->ID, $resource);
@@ -115,7 +115,7 @@
       private function createUpdateResource($postId, $resource) {
         if ($resource->getId()) {
           try {
-            $this->updateResource($resource);
+            $this->updateResource($postId, $resource);
           } catch (\Metatavu\LinkedEvents\ApiException $e) {
             $this->logApiException($e, $postId, "update");
           } catch (Error $e) {
