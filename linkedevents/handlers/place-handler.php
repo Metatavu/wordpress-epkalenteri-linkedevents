@@ -14,7 +14,7 @@
       private $filterApi;
       
       public function __construct() {
-        parent::__construct('place');
+        parent::__construct('place', 'acf/save_post');
         $this->filterApi = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Api::getFilterApi();
       }
       

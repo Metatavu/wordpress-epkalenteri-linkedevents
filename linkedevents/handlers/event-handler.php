@@ -14,7 +14,7 @@
       private $eventApi;
       
       public function __construct() {
-        parent::__construct('event');
+        parent::__construct('event', 'acf/save_post');
         $this->eventApi = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Api::getEventApi();
       }
       
@@ -53,7 +53,6 @@
         ]);
         
         foreach ($children as $child) {
-          error_log('update post: ' . $child->ID);
           $this->updatePostObject($child);
         }
       }

@@ -21,7 +21,7 @@
        * 
        * @param string $type type of the handled post object
        */
-      public function __construct($type) {
+      public function __construct($type, $updateAction) {
         $this->type = $type;
         $this->updateHook = "linkedEventsEpkalenteriCronHook" . ucfirst($type);
         $recurrence = $this->getUpdateInterval();
@@ -29,7 +29,7 @@
         add_filter('cron_schedules', [ $this, "cronSchedules" ]);
         
         add_action($this->updateHook, [ $this, 'onUpdateHook' ]);
-        add_action('acf/save_post', [ $this, "onAcfSavePost" ], 99999);
+        add_action($updateAction, [ $this, "onSavePost" ], 99999);
         add_action('update_option_linkedevents-epkalenteri', [ $this, "onOptionsUpdated" ]);
         
         if (!wp_next_scheduled($this->updateHook)) {
@@ -58,7 +58,7 @@
        * 
        * @param int $postId postId
        */
-      public function onAcfSavePost($postId) {
+      public function onSavePost($postId) {
         $postType = get_post_type($postId);
         if ($postType === $this->type) {
           $postObject = get_post($postId);
