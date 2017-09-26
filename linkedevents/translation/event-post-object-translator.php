@@ -72,7 +72,7 @@
        * @return object short description object
        */
       private function getEventShortDescription() {
-        return $this->getMetaLocaleArray($this->getPostId(), 'event_short_description', ' ');
+        return $this->getMetaLocaleArray($this->getPostId(), 'event_short_description');
       }
       
       /**
@@ -81,7 +81,7 @@
        * @return object description object
        */
       private function getEventDescription() {
-        return $this->getMetaLocaleArray($this->getPostId(), 'event_description', ' ');
+        return $this->getMetaLocaleArray($this->getPostId(), 'event_description');
       }
       
       /**
@@ -341,27 +341,21 @@
        * @param string $name meta field prefix
        * @return object localized post meta as associative array
        */
-      protected function getMetaLocaleArray($postId, $name, $default = null) {
+      protected function getMetaLocaleArray($postId, $name) {
         $fi = $this->getPostMeta($name . "_fi", true);
         $sv = $this->getPostMeta($name . "_se", true);
         $en = $this->getPostMeta($name . "_en", true);
         
         if (!empty($fi)) {
           $result['fi'] = $fi;
-        } else if ($default) {
-          $result['fi'] = $default;
         }
         
         if (!empty($sv)) {
           $result['sv'] = $sv;
-        } else if ($default) {
-          $result['sv'] = $default;
         }
         
         if (!empty($en)) {
           $result['en'] = $en;
-        } else if ($default) {
-          $result['en'] = $default;
         }
         
         return $result;
