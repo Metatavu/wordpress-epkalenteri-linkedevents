@@ -1,4 +1,4 @@
-# Wordpress LinkedEvents
+# Wordpress Linked Events epkalenteri.fi -plugin
 
 Wordpress plugin for synchronizing epkalenteri.fi events into Linked Events API
 
