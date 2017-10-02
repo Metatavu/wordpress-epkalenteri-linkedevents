@@ -29,4 +29,11 @@ These settings are used for GEO Coding addresses into components.
   - Nominatim Server - `Nominatim server. Used only if Geocoder provider is nominatim. Defaults to OpenStreetMaps server`
   - Google Maps API Key - `Google Maps API Key. Used if Geocoder provider is google_maps. Should always be defined if google_maps proivder is used because otherwise the geocoder will eventually run out of free requests and start failing`
   
+### Updater Settings
 
+Updater settings can be used to define how often updater runs and how many items are processed in one batch.
+
+Settings
+
+  - [Place|Event|Image|Keyword|Audience|Event] update interval - `interval for updater. One of hourly, twicedaily, daily`
+  - [Place|Event|Image|Keyword|Audience|Event] update batch size - `Batch size for updater (e.g. 10)`
