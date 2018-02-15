@@ -63,7 +63,7 @@
        * @return \Metatavu\LinkedEvents\Model\EventName name object
        */
       private function getEventName() {
-        return $this->getMetaLocaleArray($postId, 'event_name');
+        return $this->getMetaLocaleArray($this->getPostId(), 'event_name');
       }
       
       /**
@@ -122,28 +122,61 @@
        */
       private function getExternalLinks() {
         $result = [];
-        $result = $this->addExternalLink($result, 'Ilmoittautuminen', 'event_registration_info_url');
-        $result = $this->addExternalLink($result, 'Facebook', 'event_facebook_url');
-        $result = $this->addExternalLink($result, 'Twitter', 'event_twitter_url');
-        $result = $this->addExternalLink($result, 'YouTube', 'event_youtube_url');
-        $result = $this->addExternalLink($result, 'Instagram', 'event_instagram_url');
+        
+        $this->addOriginLink($result);
+        $this->addExternalLink($result, 'Ilmoittautuminen', 'event_registration_info_url');
+        $this->addExternalLink($result, 'Facebook', 'event_facebook_url');
+        $this->addExternalLink($result, 'Twitter', 'event_twitter_url');
+        $this->addExternalLink($result, 'YouTube', 'event_youtube_url');
+        $this->addExternalLink($result, 'Instagram', 'event_instagram_url');
+        
         return $result;
       }
       
       /**
-       * Adds external link into result array if it existss
+       * Adds origin link as external link into result array if it exists
+       * 
+       * @param type $result result array
+       */
+      private function addOriginLink(&$result) {
+        $link = $this->getOriginLink();
+        if ($link) {
+          $result[] = $link;
+        }
+      }
+      
+      /**
+       * Adds external link into result array if it exists
        * 
        * @param type $result result array
        * @param type $name link name
        * @param type $key meta key
        */
-      private function addExternalLink($result, $name, $key) {
+      private function addExternalLink(&$result, $name, $key) {
         $link = $this->getExternalLink($name, $key);
         if ($link) {
           $result[] = $link;
         }
+      }
+      
+      /**
+       * Returns origin link (permalink into Event in Wordpress) as external link object.
+       * 
+       * Null is returned when link resolving fails.
+       * 
+       * @return \Metatavu\LinkedEvents\Model\Eventlink external link object
+       */
+      private function getOriginLink() {
+        $link = get_post_permalink($this->postObject);
+        if ($link) {
+          return new \Metatavu\LinkedEvents\Model\Eventlink([
+            'name' => 'EP Kalenteri',
+            'link' => $link,
+            'language' => "fi"
+          ]);
+        }
         
-        return  $result;
+        return null;
       }
       
       /**
