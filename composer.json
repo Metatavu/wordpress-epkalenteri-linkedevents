@@ -13,6 +13,7 @@
     "php-http/guzzle6-adapter": "^1.1",
     "php-http/message": "^1.6",
     "geocoder-php/nominatim-provider": "^4.0",
-    "geocoder-php/google-maps-provider": "^4.1"
+    "geocoder-php/google-maps-provider": "^4.1",
+    "markbaker/phpgeodetic": "dev-master"
   }
 }

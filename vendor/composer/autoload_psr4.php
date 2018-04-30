@@ -16,6 +16,7 @@ return array(
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'GuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
+    'Geodetic\\' => array($vendorDir . '/markbaker/phpgeodetic/classes/src'),
     'Geocoder\\Provider\\Nominatim\\' => array($vendorDir . '/geocoder-php/nominatim-provider'),
     'Geocoder\\Provider\\GoogleMaps\\' => array($vendorDir . '/geocoder-php/google-maps-provider'),
     'Geocoder\\Http\\' => array($vendorDir . '/geocoder-php/common-http'),

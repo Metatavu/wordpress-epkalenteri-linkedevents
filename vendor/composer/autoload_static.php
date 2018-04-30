@@ -36,6 +36,7 @@ class ComposerStaticInit8feceaadbb79e0c8e31fe891f2a4ff22
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
+            'Geodetic\\' => 9,
             'Geocoder\\Provider\\Nominatim\\' => 28,
             'Geocoder\\Provider\\GoogleMaps\\' => 29,
             'Geocoder\\Http\\' => 14,
@@ -88,6 +89,10 @@ class ComposerStaticInit8feceaadbb79e0c8e31fe891f2a4ff22
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Geodetic\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/markbaker/phpgeodetic/classes/src',
         ),
         'Geocoder\\Provider\\Nominatim\\' => 
         array (

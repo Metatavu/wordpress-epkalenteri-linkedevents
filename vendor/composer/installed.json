@@ -949,5 +949,55 @@
             "sdk",
             "swagger"
         ]
+    },
+    {
+        "name": "markbaker/phpgeodetic",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MarkBaker/PHPGeodetic.git",
+            "reference": "996804f6c7a7af10dff86723fdb1206fc1cf6c98"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MarkBaker/PHPGeodetic/zipball/996804f6c7a7af10dff86723fdb1206fc1cf6c98",
+            "reference": "996804f6c7a7af10dff86723fdb1206fc1cf6c98",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2015-02-22T22:58:44+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Geodetic\\": "classes/src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL"
+        ],
+        "authors": [
+            {
+                "name": "Mark Baker",
+                "email": "mark@lange.demon.co.uk",
+                "role": "Developer"
+            }
+        ],
+        "description": "Geodetic library",
+        "homepage": "https://github.com/MarkBaker/PHPGeodetic",
+        "keywords": [
+            "ECEF",
+            "UTM",
+            "ellipsoid",
+            "geo",
+            "geodetic",
+            "latitude",
+            "longitude",
+            "mercator"
+        ]
     }
 ]
