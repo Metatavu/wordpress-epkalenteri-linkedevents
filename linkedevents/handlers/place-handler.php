@@ -21,8 +21,6 @@
       private function coordinateTransform($coordinates) {
         $lat = $coordinates[0];
         $long = $coordinates[1];
-        error_log("lat = $lat");
-        error_log("long = $long");
         $latlong = new \Geodetic\LatLong(
           new \Geodetic\LatLong\CoordinateValues(
             $lat,
