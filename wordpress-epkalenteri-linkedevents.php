@@ -11,5 +11,5 @@
 
   require_once( __DIR__ . '/linkedevents/linkedevents.php');
   require_once( __DIR__ . '/settings/settings.php');
-  
+
 ?>

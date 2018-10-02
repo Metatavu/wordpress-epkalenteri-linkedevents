@@ -88,7 +88,9 @@
 
         // Geocoder puts the address locality in either the "locality"
         // or "region" field, use region if locality is not available
-        return $this->getAddressRegion($geocodedAddress);
+        return new \Metatavu\LinkedEvents\Model\PlaceAddressLocality([
+          'fi' => $this->getAddressRegion($geocodedAddress)
+        ]);
       }
       
       /**
