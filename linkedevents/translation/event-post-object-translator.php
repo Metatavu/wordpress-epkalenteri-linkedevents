@@ -76,12 +76,18 @@
       }
       
       /**
-       * Returns event's short description
+       * Returns event's description
        * 
        * @return object description object
        */
       private function getEventDescription() {
-        return $this->getMetaLocaleArray($this->getPostId(), 'event_description');
+        $description = $this->getMetaLocaleArray($this->getPostId(), 'event_description');
+
+        if (empty($description)) {
+          $description = $this->getEventShortDescription();
+        }
+
+        return $description;
       }
       
       /**
