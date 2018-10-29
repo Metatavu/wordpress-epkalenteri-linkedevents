@@ -113,19 +113,21 @@
        * @param \ArrayAccess $resource Linked Events resource
        */
       private function createUpdateResource($postId, $resource) {
-        if ($resource->getId()) {
+        $linkedeventsId = get_post_meta($postId, 'linkedevents-id', true);
+
+        if (!$resource->getId() || !$linkedeventsId) {
           try {
-            $this->updateResource($postId, $resource);
+            $this->createResource($postId, $resource);
           } catch (\Metatavu\LinkedEvents\ApiException $e) {
-            $this->logApiException($e, $postId, "update");
+            $this->logApiException($e, $postId, "create");
           } catch (Error $e) {
             $this->logError($e, $postId, "update");
           }
         } else {
           try {
-            $this->createResource($postId, $resource);
+            $this->updateResource($postId, $resource);
           } catch (\Metatavu\LinkedEvents\ApiException $e) {
-            $this->logApiException($e, $postId, "create");
+            $this->logApiException($e, $postId, "update");
           } catch (Error $e) {
             $this->logError($e, $postId, "update");
           }

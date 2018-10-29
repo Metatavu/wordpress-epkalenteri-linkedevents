@@ -27,7 +27,7 @@
           error_log("Skipped " . $this->getPostId() . " synchronization because super event has not yet been synchronized");
           return false;
         }
-        
+
         $result = new \Metatavu\LinkedEvents\Model\Event([
           'id' => $this->getLinkedEventsId(),
           'location' => $this->getLocation(),

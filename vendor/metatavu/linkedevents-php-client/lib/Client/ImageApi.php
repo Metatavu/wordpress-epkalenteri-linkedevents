@@ -435,7 +435,7 @@ class ImageApi
                     $e->setResponseObject($data);
                     break;
             }
-
+            
             throw $e;
         }
     }
