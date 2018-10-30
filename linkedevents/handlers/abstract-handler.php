@@ -59,11 +59,7 @@
        * @param int $postId postId
        */
       public function onSavePost($postId) {
-        $postType = get_post_type($postId);
-        if ($postType === $this->type) {
-          $postObject = get_post($postId);
-          $this->updatePostObject($postObject);
-        }
+        $this->handlePostUpdate($postId);
       }
       
       /**
@@ -84,7 +80,7 @@
       private function executeUpdateTask() {
         $postObjects = $this->nextPage($this->getUpdateBatch());
         $resources = PostObjectTranslatorFactory::translatePostObjects($postObjects);
-        
+
         foreach ($resources as $postId => $resource) {
           $this->createUpdateResource($postId, $resource); 
         }
@@ -216,6 +212,20 @@
        */
       protected function logError($e, $id, $operation) {
         error_log("$this->type ($id) $operation throw " . $e->getMessage());
+      }
+
+      /**
+       * Handle post update
+       * 
+       * @param $postId
+       */
+      protected function handlePostUpdate($postId) {
+        $postType = get_post_type($postId);
+
+        if ($postType === $this->type) {
+          $postObject = get_post($postId);
+          $this->updatePostObject($postObject);
+        }
       }
       
       /**
