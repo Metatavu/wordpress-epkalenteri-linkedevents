@@ -16,6 +16,7 @@
       public function __construct() {
         parent::__construct('attachment', 'save_post');
         $this->imageApi = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Api::getImageApi();
+        add_filter('wp_update_attachment_metadata', [$this, "onUpdateAttachmentMetaData"], 10, 2);
       }
       
       /**
@@ -28,6 +29,17 @@
           'post_type'        => $type,
           'suppress_filters' => true 
         ]);
+      }
+
+      /**
+       * Fires when attachment metadata is updated
+       * 
+       * @param $data
+       * @param $postId
+       */
+      public function onUpdateAttachmentMetaData($data, $postId) {
+        $this->handlePostUpdate($postId);
+        return $data;
       }
       
       /**
