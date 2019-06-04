@@ -7,8 +7,6 @@
   
   require_once('settings-ui.php');  
   
-  define(LINKEDEVENTS_SETTINGS_OPTION, 'linkedevents-epkalenteri');
-  
   if (!class_exists( '\Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings' ) ) {
 
     class Settings {
@@ -20,7 +18,7 @@
        * @return string setting value
        */
       public static function getValue($name) {
-        $options = get_option(LINKEDEVENTS_SETTINGS_OPTION);
+        $options = get_option("linkedevents-epkalenteri");
         if ($options) {
           return $options[$name];
         }
@@ -35,14 +33,14 @@
        * @param string $value setting value
        */
       public static function setValue($name, $value) {
-        $options = get_option(LINKEDEVENTS_SETTINGS_OPTION);
+        $options = get_option("linkedevents-epkalenteri");
         if (!$options) {
           $options = [];
         } 
         
         $options[$name] = $value;
         
-        update_option(LINKEDEVENTS_SETTINGS_OPTION, $options);
+        update_option("linkedevents-epkalenteri", $options);
       }
       
     }

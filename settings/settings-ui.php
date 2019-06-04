@@ -5,10 +5,6 @@
     exit;
   }
   
-  define(LINKEDEVENTS_EPKALENTERI_SETTINGS_OPTION, 'linkedevents-epkalenteri');
-  define(LINKEDEVENTS_EPKALENTERI_SETTINGS_GROUP, 'linkedevents-epkalenteri');
-  define(LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE, 'linkedevents-epkalenteri');
-  
   if (!class_exists( 'Metatavu\LinkedEvents\Wordpress\EPKalenteri\SettingsUI' ) ) {
 
     class SettingsUI {
@@ -19,14 +15,14 @@
       }
 
       public function adminMenu() {
-        add_options_page (__( "Linked Events Settings", 'linkedevents-epkalenteri' ), __( "Linked Events EP", 'linkedevents-epkalenteri' ), 'manage_options', LINKEDEVENTS_EPKALENTERI_SETTINGS_OPTION, [$this, 'settingsPage']);
+        add_options_page (__( "Linked Events Settings", 'linkedevents-epkalenteri' ), __( "Linked Events EP", 'linkedevents-epkalenteri' ), 'manage_options', "linkedevents-epkalenteri", [$this, 'settingsPage']);
       }
 
       public function adminInit() {
-        register_setting(LINKEDEVENTS_EPKALENTERI_SETTINGS_GROUP, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
-        add_settings_section('api', __( "API Settings", 'linkedevents-epkalenteri' ), null, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
-        add_settings_section('geocoder', __( "GEOCoder Settings", 'linkedevents-epkalenteri' ), null, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
-        add_settings_section('updaters', __( "Updater Settings", 'linkedevents-epkalenteri' ), null, LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
+        register_setting("linkedevents-epkalenteri", "linkedevents-epkalenteri");
+        add_settings_section('api', __( "API Settings", 'linkedevents-epkalenteri' ), null, "linkedevents-epkalenteri");
+        add_settings_section('geocoder', __( "GEOCoder Settings", 'linkedevents-epkalenteri' ), null, "linkedevents-epkalenteri");
+        add_settings_section('updaters', __( "Updater Settings", 'linkedevents-epkalenteri' ), null, "linkedevents-epkalenteri");
         
         $this->addOption('api', 'url', 'api-url', __( "API URL", 'linkedevents-epkalenteri'));
         $this->addOption('api', 'text', 'api-key', __( "API Key", 'linkedevents-epkalenteri' ));
@@ -56,7 +52,7 @@
       }
 
       private function addOption($group, $type, $name, $title) {
-        add_settings_field($name, $title, [$this, 'createFieldUI'], LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE, $group, [
+        add_settings_field($name, $title, [$this, 'createFieldUI'], "linkedevents-epkalenteri", $group, [
           'name' => $name, 
           'type' => $type
         ]);
@@ -66,7 +62,7 @@
         $name = $opts['name'];
         $type = $opts['type'];
         $value = Settings::getValue($name);
-        echo "<input id='$name' name='" . LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE . "[$name]' size='42' type='$type' value='$value' />";
+        echo "<input id='$name' name='" . "linkedevents-epkalenteri" . "[$name]' size='42' type='$type' value='$value' />";
       }
 
       public function settingsPage() {
@@ -77,8 +73,8 @@
         echo '<div class="wrap">';
         echo "<h2>" . __( "Linked Events", 'linkedevents-epkalenteri') . "</h2>";
         echo '<form action="options.php" method="POST">';
-        settings_fields(LINKEDEVENTS_EPKALENTERI_SETTINGS_GROUP);
-        do_settings_sections(LINKEDEVENTS_EPKALENTERI_SETTINGS_PAGE);
+        settings_fields("linkedevents-epkalenteri");
+        do_settings_sections("linkedevents-epkalenteri");
         submit_button();
         echo "</form>";
         echo "</div>";
