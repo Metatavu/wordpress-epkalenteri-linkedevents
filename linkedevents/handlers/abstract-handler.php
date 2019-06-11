@@ -253,7 +253,7 @@
        * @return int offset
        */
       private function getUpdateBatch() {
-        $batch = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue($this->getUpdateBatchSetting());
+        $batch = intval(\Metatavu\LinkedEvents\Wordpress\EPKalenteri\Settings\Settings::getValue($this->getUpdateBatchSetting()));
         return $batch ? $batch : 5;
       }
       

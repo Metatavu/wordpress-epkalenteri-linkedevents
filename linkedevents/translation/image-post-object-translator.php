@@ -42,7 +42,8 @@
        * @return string name object
        */
       private function getImageName() {
-        return $this->postObject->post_title;
+        $postTitle = $this->postObject->post_title;
+        return $postTitle ? $postTitle : "untitled";
       }
       
     }

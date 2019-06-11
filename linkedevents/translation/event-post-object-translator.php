@@ -346,9 +346,9 @@
       private function getImages() {
         $postId = $this->getPostMeta('event_image', true);
         if ($postId) {
-          $locationId = get_post_meta($postId, 'linkedevents-id', true);
-          if ($locationId) {
-            return [ $this->getImageRef($locationId) ];
+          $imageId = get_post_meta($postId, 'linkedevents-id', true);
+          if ($imageId) {
+            return [ $this->getImageRef($imageId) ];
           }
         }
         
