@@ -59,7 +59,7 @@
        */
       public function createResource($postId, $resource) {
         $created = $this->imageApi->imageCreate(null, [
-          url => $resource->getUrl()
+          'url' => $resource->getUrl()
         ]);
         
         $this->setLinkedEventsId($postId, $created->getId());
