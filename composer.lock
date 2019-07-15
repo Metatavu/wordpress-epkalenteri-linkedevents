@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7fda98eafdda4c0d58cd4532f0ba5d1d",
+    "content-hash": "e600ac9dfee7c15a26fd6a553701ba5c",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -465,16 +465,16 @@
         },
         {
             "name": "metatavu/linkedevents-php-client",
-            "version": "dev-master",
+            "version": "0.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Metatavu/linkedevents-client-php.git",
-                "reference": "6a8e4eb57b85a7e2cfe39d768a39b175891931ad"
+                "reference": "175388bd653d600feebc9630ba8b70927bbbfcfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Metatavu/linkedevents-client-php/zipball/6a8e4eb57b85a7e2cfe39d768a39b175891931ad",
-                "reference": "6a8e4eb57b85a7e2cfe39d768a39b175891931ad",
+                "url": "https://api.github.com/repos/Metatavu/linkedevents-client-php/zipball/175388bd653d600feebc9630ba8b70927bbbfcfb",
+                "reference": "175388bd653d600feebc9630ba8b70927bbbfcfb",
                 "shasum": ""
             },
             "require": {
@@ -512,7 +512,7 @@
                 "sdk",
                 "swagger"
             ],
-            "time": "2017-09-24T07:44:02+00:00"
+            "time": "2018-05-16T10:56:21+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -978,7 +978,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "metatavu/linkedevents-php-client": 20,
         "markbaker/phpgeodetic": 20
     },
     "prefer-stable": false,
