@@ -40,6 +40,16 @@
       }
       
       /**
+       * Deletes an event from Linked Events
+       * 
+       * @param int post object id
+       * @param \Metatavu\LinkedEvents\Model\Event $resource
+       */
+      public function deleteResource($postId, $resource) {
+        $this->eventApi->eventDelete($resource->getId());
+      }
+      
+      /**
        * Updates event's child post objects
        * 
        * @param type $postId post id
