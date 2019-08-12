@@ -30,6 +30,9 @@
         
         add_action($this->updateHook, [ $this, 'onUpdateHook' ]);
         add_action($updateAction, [ $this, "onSavePost" ], 99999);
+        add_action("before_delete_post", [ $this, "onBeforeDeletePost" ]);
+        add_action("trashed_post", [ $this, "onTrashedPost" ], 99999);
+        add_action("untrashed_post", [ $this, "onUntrashedPost" ], 99999);
         add_action('update_option_linkedevents-epkalenteri', [ $this, "onOptionsUpdated" ]);
         
         if (!wp_next_scheduled($this->updateHook)) {
@@ -47,6 +50,16 @@
       }
       
       /**
+       * Deletes a Linked Events resource
+       * 
+       * @param int $postId
+       * @param \ArrayAccess $resource Linked Events resource
+       */
+      public function deleteResource($postId, $resource) {
+        // TODO: Default implementation is currently null
+      }
+
+      /**
        * Function executed on scheduled times.
        */
       public function onUpdateHook() {
@@ -62,6 +75,33 @@
         $this->handlePostUpdate($postId);
       }
       
+      /**
+       * Function executed before post is deleted
+       * 
+       * @param int $postId postId
+       */
+      public function onBeforeDeletePost($postId) {
+        $this->handlePostDelete($postId);
+      }
+
+      /**
+       * Function executed after post trash
+       * 
+       * @param int $postId postId
+       */
+      public function onTrashedPost($postId) {
+        $this->handlePostUpdate($postId);
+      }
+
+      /**
+       * Function executed after post untrash
+       * 
+       * @param int $postId postId
+       */
+      public function onUntrashedPost($postId) {
+        $this->handlePostUpdate($postId);
+      }
+
       /**
        * Function executed when plugin settings are updated
        */
@@ -99,6 +139,18 @@
           if ($resource === null) {
             error_log("Failed to translate $postObject->ID of type $postObject->post_type");
           }
+        }
+      }
+      
+      /**
+       * Deletes single post object
+       * 
+       * @param \WP_Post $postObject
+       */
+      protected function deletePostObject($postObject) {
+        $resource = PostObjectTranslatorFactory::translatePostObject($postObject);
+        if ($resource) {
+          $this->deleteResource($postObject->ID, $resource);
         }
       }
       
@@ -225,6 +277,20 @@
         if ($postType === $this->type) {
           $postObject = get_post($postId);
           $this->updatePostObject($postObject);
+        }
+      }
+
+      /**
+       * Handle post delete
+       * 
+       * @param $postId
+       */
+      protected function handlePostDelete($postId) {
+        $postType = get_post_type($postId);
+
+        if ($postType === $this->type) {
+          $postObject = get_post($postId);
+          $this->deletePostObject($postObject);
         }
       }
       
