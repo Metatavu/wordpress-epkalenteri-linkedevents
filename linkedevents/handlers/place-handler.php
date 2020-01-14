@@ -35,18 +35,10 @@
       }
       
       public function updateResource($postId, $resource) {
-        if ($resource->getPosition() && $resource->getPosition()->getCoordinates()) {
-          $resource->getPosition()->setCoordinates(
-            $this->coordinateTransform($resource->getPosition()->getCoordinates()));
-        }
         $this->filterApi->placeUpdate($resource->getId(), $resource);
       }
       
       public function createResource($postId, $resource) {
-        if ($resource->getPosition() && $resource->getPosition()->getCoordinates()) {
-          $resource->getPosition()->setCoordinates(
-            $this->coordinateTransform($resource->getPosition()->getCoordinates()));
-        }
         $created = $this->filterApi->placeCreate($resource);
         $this->setLinkedEventsId($postId, $created->getId());
       }
