@@ -17,22 +17,6 @@
         parent::__construct('place', 'acf/save_post');
         $this->filterApi = \Metatavu\LinkedEvents\Wordpress\EPKalenteri\Api::getFilterApi();
       }
-
-      private function coordinateTransform($coordinates) {
-        $lat = $coordinates[0];
-        $long = $coordinates[1];
-        $latlong = new \Geodetic\LatLong(
-          new \Geodetic\LatLong\CoordinateValues(
-            $lat,
-            $long,
-            \Geodetic\Angle::DEGREES,
-            0.0,
-            \Geodetic\Distance::METRES));
-        $datum = new \Geodetic\Datum(\Geodetic\Datum::WGS84);
-        $utm = $latlong->toUTM($datum);
-
-        return [$utm->getEasting(), $utm->getNorthing()];
-      }
       
       public function updateResource($postId, $resource) {
         $this->filterApi->placeUpdate($resource->getId(), $resource);
