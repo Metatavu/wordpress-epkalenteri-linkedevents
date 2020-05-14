@@ -207,6 +207,24 @@
         
         return $ids;
       }
+
+      /**
+       * Returns localized post title
+       * 
+       * @return string localized post title
+       */
+      protected function getPostLocalizedTitle($locale) {
+        $id = pll_get_post($this->getPostId(), $locale);
+
+        if ($id) {
+          $post = get_post($id);
+          if ($post) {
+            return $post->post_title; 
+          }
+        }
+
+        return null;
+      }
       
       /**
        * Returns IdRef array for keyword ids

@@ -21,7 +21,9 @@
        */
       public function translatePostObject() {
         $name = new \Metatavu\LinkedEvents\Model\KeywordName([
-          'fi' => $this->postObject->post_title
+          'fi' => $this->getPostLocalizedTitle("fi"),
+          'sv' => $this->getPostLocalizedTitle("sv"),
+          'en' => $this->getPostLocalizedTitle("en")
         ]);
         
         $result = new \Metatavu\LinkedEvents\Model\Keyword([
@@ -33,10 +35,10 @@
           'aggregate' => false,
           'dataSource' => $this->getDataSource()
         ]);
-     
+
         return $result;
       }
-      
+
     }
     
   }
