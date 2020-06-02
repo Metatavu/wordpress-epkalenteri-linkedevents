@@ -305,7 +305,27 @@
        * @return \Metatavu\LinkedEvents\Model\Keyword[] event keywords
        */
       private function getKeywords() {
-        return $this->getMetaKeywords(['event_keywords', 'event_categories']);
+        $keywords = $this->getMetaKeywords(['event_keywords', 'event_categories']);
+        if ($this->getPostMeta('event_promoted', true)) {
+          $isPromoted = false;
+          foreach ($keywords as $keyword) {
+            if ($keyword['id'] === 'eptapahtumat:afpdsmmsf8') {
+              $isPromoted = true;
+            }
+          }
+          if (!$isPromoted) {
+            array_push($keywords, $this->getIdRef('eptapahtumat:afpdsmmsf8'));
+          }
+        } else {
+          $filterArray = array();
+          foreach ($keywords as $keyword) {
+            if (!($keyword['id'] === 'eptapahtumat:afpdsmmsf8')) {
+              array_push($filterArray, $keyword);
+            }
+          }
+          $keywords = $filterArray;
+        }
+        return $keywords;
       }
       
       /**
